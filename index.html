@@ -1,215 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PROMPTSCULPT AI</title>
-
-<style>
-body {
-    font-family: Arial, sans-serif;
-    background: #0f172a;
-    color: white;
-    margin: 0;
-    padding: 20px;
-}
-
-.container {
-    max-width: 900px;
-    margin: auto;
-}
-
-h1 {
-    text-align: center;
-    color: #38bdf8;
-}
-
-textarea {
-    width: 100%;
-    height: 150px;
-    padding: 10px;
-    border-radius: 8px;
-    border: none;
-    font-size: 16px;
-}
-
-button {
-    margin-top: 10px;
-    padding: 10px 20px;
-    background: #38bdf8;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-button:hover {
-    background: #0ea5e9;
-}
-
-.card {
-    background: #1e293b;
-    padding: 15px;
-    margin-top: 20px;
-    border-radius: 10px;
-}
-
-.progress-bar {
-    height: 20px;
-    background: #334155;
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.progress {
-    height: 100%;
-    background: #22c55e;
-    width: 0%;
-    text-align: center;
-    line-height: 20px;
-    font-size: 12px;
-}
-
-.footer {
-    margin-top: 30px;
-    text-align: center;
-    color: gray;
-}
-</style>
+    <meta charset="UTF-8">
+    <title>PROMPTSCULPT AI</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
-<div class="container">
 
-<h1>🧠 PROMPTSCULPT AI</h1>
-<p style="text-align:center;">A Structured Prompt Quality Analyzer and Optimizer</p>
-
-<textarea id="promptInput" placeholder="Enter your prompt here..."></textarea>
-<button onclick="analyzePrompt()">Analyze & Optimize</button>
-
-<div class="card" id="scoreSection" style="display:none;">
-    <h3>📊 Prompt Quality Score</h3>
-    <div class="progress-bar">
-        <div class="progress" id="progressBar">0%</div>
+<!-- Splash Screen -->
+<div id="splash-screen">
+    <div class="ai-brain">AI</div>
+    <h1>PROMPTSCULPT AI</h1>
+    <p id="loading-text">Loading... 0%</p>
+    <div class="progress-container">
+        <div id="progress-bar"></div>
     </div>
-    <p id="scoreText"></p>
 </div>
 
-<div class="card" id="feedbackSection" style="display:none;">
-    <h3>📝 Feedback</h3>
-    <ul id="feedbackList"></ul>
+<!-- Main Website -->
+<div class="main-content">
+    <h2>Welcome to PROMPTSCULPT AI</h2>
+    <p>Your Structured Prompt Quality Analyzer</p>
 </div>
 
-<div class="card" id="optimizedSection" style="display:none;">
-    <h3>✨ Optimized Prompt Suggestion</h3>
-    <pre id="optimizedOutput"></pre>
-</div>
-
-<div class="card">
-    <h3>📂 Sample Prompt Dataset</h3>
-    <ul>
-        <li>Explain AI → Bad</li>
-        <li>Explain Artificial Intelligence in 5 bullet points → Average</li>
-        <li>Compare supervised and unsupervised learning in table format → Good</li>
-        <li>Write C code for binary search → Good</li>
-        <li>Summarize machine learning for beginners in 100 words → Good</li>
-    </ul>
-</div>
-
-<div class="footer">
-PROMPTSCULPT AI © 2026 | Developed by Archana
-</div>
-
-</div>
-
-<script>
-function analyzePrompt() {
-    const prompt = document.getElementById("promptInput").value;
-    if (prompt.trim() === "") {
-        alert("Please enter a prompt.");
-        return;
-    }
-
-    let score = 0;
-    let feedback = [];
-
-    // Length Check
-    if (prompt.split(" ").length > 8) {
-        score += 20;
-    } else {
-        feedback.push("Prompt is too short. Add more descriptive details.");
-    }
-
-    // Task Detection
-    const taskKeywords = ["explain","summarize","compare","list","generate","write","analyze","describe"];
-    if (taskKeywords.some(word => prompt.toLowerCase().includes(word))) {
-        score += 20;
-    } else {
-        feedback.push("Clearly specify the task (e.g., explain, compare, summarize).");
-    }
-
-    // Context Detection
-    if (prompt.toLowerCase().includes("for") || prompt.toLowerCase().includes("about")) {
-        score += 20;
-    } else {
-        feedback.push("Add proper context to make the prompt specific.");
-    }
-
-    // Format Detection
-    const formatKeywords = ["in points","step by step","table","code","paragraph","bullet points"];
-    if (formatKeywords.some(word => prompt.toLowerCase().includes(word))) {
-        score += 20;
-    } else {
-        feedback.push("Specify output format (e.g., step by step, table, bullet points).");
-    }
-
-    // Constraint Detection
-    if (/\d+/.test(prompt)) {
-        score += 20;
-    } else {
-        feedback.push("Add constraints (e.g., word limit, number of points).");
-    }
-
-    // Show Score
-    document.getElementById("scoreSection").style.display = "block";
-    const progressBar = document.getElementById("progressBar");
-    progressBar.style.width = score + "%";
-    progressBar.innerText = score + "%";
-    document.getElementById("scoreText").innerText = "Score: " + score + " / 100";
-
-    // Show Feedback
-    document.getElementById("feedbackSection").style.display = "block";
-    const feedbackList = document.getElementById("feedbackList");
-    feedbackList.innerHTML = "";
-    if (feedback.length === 0) {
-        feedbackList.innerHTML = "<li>Excellent prompt! Your structure is strong.</li>";
-    } else {
-        feedback.forEach(item => {
-            const li = document.createElement("li");
-            li.textContent = item;
-            feedbackList.appendChild(li);
-        });
-    }
-
-    // Optimized Prompt
-    document.getElementById("optimizedSection").style.display = "block";
-    document.getElementById("optimizedOutput").textContent =
-`Task:
-${prompt}
-
-Context:
-Provide a clear and well-structured explanation relevant to the topic.
-
-Constraints:
-- Keep response concise and informative
-- Include examples if applicable
-- Maintain clarity
-
-Output Format:
-- Step-by-step explanation
-- Use bullet points where needed`;
-}
-</script>
-
+<script src="js/script.js"></script>
 </body>
 </html>
